@@ -21,7 +21,9 @@ using CSV, StatsPlots, Turing
 
 url = "https://raw.githubusercontent.com/julia4ta/tutorials/master/Series%2009/Files/wolfspider.csv"
 
-data = CSV.File(download(url))
+data = CSV.File(download(url)) # also available from Files
+# CSV.write("wolfspider.csv", data);
+# data = CSV.File("Files/wolfspider.csv")
 
 X = data.feature
 
@@ -32,14 +34,14 @@ data_matrix = [X y]
 # visualize data
 
 p_data = scatter(X, y,
-    legend = false,
-    xlims = (0, 1.25),
-    color = :red,
-    markersize = 5,
-    title = "Wolf Spider Present (1) or Absent (0)",
-    xlabel = "Median Grain Size of Sand (mm)",
-    ylabel = "Probability of Presence",
-    widen = true
+    legend=false,
+    xlims=(0, 1.25),
+    color=:red,
+    markersize=5,
+    title="Wolf Spider Present (1) or Absent (0)",
+    xlabel="Median Grain Size of Sand (mm)",
+    ylabel="Probability of Presence",
+    widen=true
 )
 
 ########################################
@@ -82,9 +84,9 @@ for i in 1:samples
     line(x) = intercept + slope * x
     p(x) = 1 / (1 + exp(-line(x)))
     plot!(p_data, xs, p,
-        legend = false,
+        legend=false,
         # samples
-        linewidth = 2, color = :blue, alpha = 0.03
+        linewidth=2, color=:blue, alpha=0.03
     )
 end
 
