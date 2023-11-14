@@ -63,9 +63,9 @@ water = 6
 # define model
 
 @model function globe_toss(tosses, water)
-    # prior
+    # prior f(θ)
     percent_water ~ Beta(1, 1)
-    # likelihood
+    # likelihood f(X|θ)
     water ~ Binomial(tosses, percent_water)
 end
 
@@ -84,13 +84,13 @@ chain = sample(model, sampler, samples)
 plot(chain)
 
 density(chain[:percent_water],
-    legend = false,
-    linewidth = 2,
-    fill = true,
-    alpha = 0.3,
-    xlims = (0, 1),
-    widen = true,
-    title = "Posterior Distribution (approx)",
-    xlabel = "percent_water",
-    ylabel = "density"
+    legend=false,
+    linewidth=2,
+    fill=true,
+    alpha=0.3,
+    xlims=(0, 1),
+    widen=true,
+    title="Posterior Distribution (approx)",
+    xlabel="percent_water",
+    ylabel="density"
 )
