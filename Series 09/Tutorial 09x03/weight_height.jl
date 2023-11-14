@@ -22,24 +22,24 @@ using CSV, DataFrames, GLM, StatsPlots, Turing
 
 url = "https://raw.githubusercontent.com/rmcelreath/rethinking/master/data/Howell1.csv"
 
-df = CSV.read(download(url), DataFrame, delim = ';')
+df = CSV.read(download(url), DataFrame, delim=';')
 
-df_adult = df[df.age .>= 18, :]
+df_adult = df[df.age.>=18, :]
 
 # visualize data
 
 p_glm = scatter(df_adult.height, df_adult.weight,
-    legend = false,
-    title = "Adult Weight-Height Association (GLM)",
-    xlabel = "Height (cm)",
-    ylabel = "Weight (kg)"
+    legend=false,
+    title="Adult Weight-Height Association (GLM)",
+    xlabel="Height (cm)",
+    ylabel="Weight (kg)"
 )
 
 p_turing = scatter(df_adult.height, df_adult.weight,
-    legend = false,
-    title = "Adult Weight-Height Association (Turing)",
-    xlabel = "Height (cm)",
-    ylabel = "Weight (kg)"
+    legend=false,
+    title="Adult Weight-Height Association (Turing)",
+    xlabel="Height (cm)",
+    ylabel="Weight (kg)"
 )
 
 ########################################
@@ -57,13 +57,13 @@ ols_intercept = coef(ols)[1]
 ols_slope = coef(ols)[2]
 
 plot!(p_glm, x -> ols_intercept + ols_slope * x,
-    legend = false,
-    linewidth = 2
+    legend=false,
+    linewidth=2
 )
 
 # make predictions
 
-ols_newX = DataFrame(height = [140, 160, 175])
+ols_newX = DataFrame(height=[140, 160, 175])
 
 ols_predictions = predict(ols, ols_newX)
 
@@ -98,15 +98,15 @@ chain = sample(model, sampler, samples)
 plot(chain)
 
 for i in 1:samples
-    intercept = chain[i, 1, 1]
+    intercept = chain[i, 1, 1] # [row, col, chain_ID]
     slope = chain[i, 2, 1]
     error = chain[i, 3, 1]
     plot!(p_turing, x -> intercept + slope * x,
-        legend = false,
+        legend=false,
         # samples
-        linewidth = 2, color = :orange, alpha = 0.02,
+        linewidth=2, color=:orange, alpha=0.02,
         # error
-        ribbon = error, fillalpha = 0.003
+        ribbon=error, fillalpha=0.003
     )
 end
 
@@ -115,9 +115,9 @@ p_turing
 # make predictions
 
 newX = [140, 160, 175]
-
+# for Turing `predict`, enter `missing` for data for which distrib is to be predicted (in this case, weights)
 predictions = predict(mymodel(missing, newX), chain)
 
-# visualize predictions
+# visualize predictions (predictions for each newX are now a chain/distribution)
 
 plot(predictions)
