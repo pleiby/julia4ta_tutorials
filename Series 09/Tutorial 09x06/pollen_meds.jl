@@ -24,50 +24,50 @@ df = CSV.read(download(url), DataFrame)
 # split data
 
 noPollen_noMeds = df[
-    (df[:, :pollen] .== 0) .& (df[:, :meds] .== 0), :count
+    (df[:, :pollen].==0).&(df[:, :meds].==0), :count
 ]
 
 noPollen_Meds = df[
-    (df[:, :pollen] .== 0) .& (df[:, :meds] .== 1), :count
+    (df[:, :pollen].==0).&(df[:, :meds].==1), :count
 ]
 
 Pollen_noMeds = df[
-    (df[:, :pollen] .== 1) .& (df[:, :meds] .== 0), :count
+    (df[:, :pollen].==1).&(df[:, :meds].==0), :count
 ]
 
 Pollen_Meds = df[
-    (df[:, :pollen] .== 1) .& (df[:, :meds] .== 1), :count
+    (df[:, :pollen].==1).&(df[:, :meds].==1), :count
 ]
 
 # visualize data
 
 p1 = histogram(noPollen_noMeds,
-    legend = false,
-    title = "No Pollen, No Meds",
-    widen = true
+    legend=false,
+    title="No Pollen, No Meds",
+    widen=true
 )
 
 p2 = histogram(noPollen_Meds,
-    legend = false,
-    title = "No Pollen, Meds",
-    widen = true
+    legend=false,
+    title="No Pollen, Meds",
+    widen=true
 )
 
 p3 = histogram(Pollen_noMeds,
-    legend = false,
-    title = "Pollen, No Meds",
-    widen = true
+    legend=false,
+    title="Pollen, No Meds",
+    widen=true
 )
 
 p4 = histogram(Pollen_Meds,
-    legend = false,
-    title = "Pollen, Meds",
-    widen = true
+    legend=false,
+    title="Pollen, Meds",
+    widen=true
 )
 
 plot(p1, p2, p3, p4,
-    layout = (2, 2),
-    legend = false
+    layout=(2, 2),
+    legend=false
 )
 
 # set up features and labels
@@ -82,7 +82,7 @@ labels = df[:, :count]
 
 # define model
 
-@model function mymodel(X, y)
+@model function poisson_exptransform_model(X, y)
     # prior
     intercept ~ Normal(0, 1)
     pollen ~ Normal(0, 1)
@@ -97,7 +97,7 @@ end
 
 # infer posterior probability
 
-model = mymodel(features, labels)
+model = poisson_exptransform_model(features, labels)
 
 sampler = NUTS()
 
@@ -118,9 +118,9 @@ newX = [
     1 1 # Pollen_Meds
 ]
 
-missing_counts = fill(missing, 4)
+missing_counts = fill(missing, 4) # vector of missing needed for missing dep var data
 
-predict_model = mymodel(newX, missing_counts)
+predict_model = poisson_exptransform_model(newX, missing_counts)
 
 predictions = predict(predict_model, chain)
 
@@ -131,31 +131,32 @@ plot(predictions)
 # recycle plots
 
 p5 = histogram(predictions[:, 1, 1],
-    legend = false,
-    title = "No Pollen, No Meds (predict)",
-    widen = true
+    legend=false,
+    title="No Pollen, No Meds (predict)",
+    widen=true
 )
 
 p6 = histogram(predictions[:, 2, 1],
-    legend = false,
-    title = "No Pollen, Meds (predict)",
-    widen = true
+    legend=false,
+    title="No Pollen, Meds (predict)",
+    widen=true
 )
 
 p7 = histogram(predictions[:, 3, 1],
-    legend = false,
-    title = "Pollen, No Meds (predict)",
-    widen = true
+    legend=false,
+    title="Pollen, No Meds (predict)",
+    widen=true
 )
 
 p8 = histogram(predictions[:, 4, 1],
-    legend = false,
-    title = "Pollen, Meds (predict)",
-    widen = true
+    legend=false,
+    title="Pollen, Meds (predict)",
+    widen=true
 )
 
+# plot actual and predicted distributions side-by-side for each of 4 conditions
 plot(p1, p5, p2, p6, p3, p7, p4, p8,
-    layout = (4, 2),
-    legend = false,
-    size = (720, 840)
+    layout=(4, 2),
+    legend=false,
+    size=(720, 840)
 )

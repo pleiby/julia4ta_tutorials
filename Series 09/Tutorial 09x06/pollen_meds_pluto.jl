@@ -7,7 +7,11 @@ using InteractiveUtils
 # This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
 macro bind(def, element)
     quote
-        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
+        local iv = try
+            Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value
+        catch
+            b -> missing
+        end
         local el = $(esc(element))
         global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
         el
@@ -37,18 +41,18 @@ md"Average Rate of Occurrences (λ): $(@bind lambda Slider(1.0:0.1:10.0, 1.0, tr
 
 # ╔═╡ 62bd34f8-c011-49a6-a6f9-9d8bd95906fc
 begin
-	sticks(Poisson(lambda),
-		linewidth = 2,
-		legend = false,
-		xticks = collect(0:1:20),
-		xlims = (0, 20),
-		ylims = (0, 0.5),
-		widen =  true,
-		title = "Probability Mass Function"
-	)
-	scatter!(Poisson(lambda),
-		markersize = 5,
-	)
+    sticks(Poisson(lambda),
+        linewidth=2,
+        legend=false,
+        xticks=collect(0:1:20),
+        xlims=(0, 20),
+        ylims=(0, 0.5),
+        widen=true,
+        title="Probability Mass Function"
+    )
+    scatter!(Poisson(lambda),
+        markersize=5,
+    )
 end
 
 # ╔═╡ 928f3290-97b3-4567-aee8-b8d78200d5f9
@@ -158,15 +162,15 @@ ys1 = [line(x) for x in xs]
 
 # ╔═╡ 6368687a-d6f8-4980-9c27-1b2cefaa2a3f
 begin
-	plot(xs, ys1,
-		legend = false,
-		xlims = (-10, 10),
-		ylims = (-5, 5),
-		linewidth = 3,
-		title = "Line",
-		widen = true
-	)
-	vline!([0], color = :black)
+    plot(xs, ys1,
+        legend=false,
+        xlims=(-10, 10),
+        ylims=(-5, 5),
+        linewidth=3,
+        title="Line",
+        widen=true
+    )
+    vline!([0], color=:black)
 end
 
 # ╔═╡ 70423dd9-23f7-48d1-803d-2dde9db6307a
@@ -174,15 +178,15 @@ ys2 = [log_transform(x) for x in xs]
 
 # ╔═╡ 1dabf888-3343-42ba-a796-dcf5f63b4693
 begin
-	plot(xs, ys2,
-		legend = false,
-		xlims = (-10, 10),
-		ylims = (0, 10),
-		linewidth = 3,
-		title = "Log Transform",
-		widen = true
-	)
-	vline!([0], color = :black)
+    plot(xs, ys2,
+        legend=false,
+        xlims=(-10, 10),
+        ylims=(0, 10),
+        linewidth=3,
+        title="Log Transform",
+        widen=true
+    )
+    vline!([0], color=:black)
 end
 
 # ╔═╡ d913e2e7-17c5-433c-bb98-c73f369a8190
@@ -196,17 +200,17 @@ md"#### Normal(0, 1)"
 
 # ╔═╡ 88c12c4d-3b20-4030-8514-29c981cc50d7
 begin
-	plot(Normal(0, 1),
-		legend = false,
-		xlims = (-3, 3),
-		ylims = (0, 0.5),
-		linewidth = 2,
-		fill = true,
-		alpha = 0.3,
-		title = "PDF Normal(0, 1)"
-	)
-	vline!([0])
-	vline!([0+1, 0-1])
+    plot(Normal(0, 1),
+        legend=false,
+        xlims=(-3, 3),
+        ylims=(0, 0.5),
+        linewidth=2,
+        fill=true,
+        alpha=0.3,
+        title="PDF Normal(0, 1)"
+    )
+    vline!([0])
+    vline!([0 + 1, 0 - 1])
 end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
